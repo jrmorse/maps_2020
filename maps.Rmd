@@ -1,0 +1,30 @@
+---
+title: "maps-2020-02-18"
+author: "John Morse"
+date: "2/18/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+install.packages("tidycensus")
+```
+
+```{r}
+library(tidycensus)
+
+census_api_key("c2c21e8fa34885d3d7dd8e572a85edef3a1d34ef")
+
+install = TRUE
+```
+
+```{r}
+pop <- get_decennial(geography = "state",
+                     variables = "P001001",
+                     year = 2010)
+glimpse(pop)
+```
+
