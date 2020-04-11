@@ -1,0 +1,168 @@
+---
+title: "MAPS_2020"
+author: "John Morse"
+date: "4/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+options(tigris_use_cache = TRUE)
+```
+
+```{r, include=FALSE}
+library(tidycensus)
+
+census_api_key("292d6176547c1983be5dda10ca9bbe781ef34697")
+
+install = TRUE
+```
+
+
+```{r, include=FALSE, message = FALSE}
+library(tidyverse)
+
+pop <- get_decennial(geography = "state",
+                     variables = "P001001",
+                     year = 2010)
+glimpse(pop)
+```
+
+```{r, include=FALSE, message = FALSE, results = FALSE}
+rural <- get_decennial(geography = "state",
+                       variables = c("P001001", "P002005"),
+                       year = 2010,
+                       output = "wide")
+```
+
+```{r, include=FALSE, message = FALSE, results = FALSE}
+racevars <- c(White = "B02001_002", 
+              Black = "B02001_003", 
+              Asian = "B02001_005",
+              Hispanic = "B03003_003")
+```
+
+```{r newhampshire, message = FALSE, cache = TRUE, results = FALSE}
+newhampshire <- get_acs(geography = "tract",
+                  variables = racevars, 
+                  year = 2018,
+                  state = "NH",
+                  geometry = TRUE,
+                  summary_var = "B02001_001")
+
+newhampshire %>%
+  mutate(Percent = 100 * (estimate / summary_est)) %>%
+  ggplot(aes(fill = Percent, color = Percent)) +
+  facet_wrap(~ variable) +
+  geom_sf() +
+  scale_fill_viridis_c(direction = -1) +
+  scale_color_viridis_c(direction = -1) +
+  labs(title = "Racial geography of New Hampshire",
+       caption = "Source: American Community Survey 2014-2018") +
+  theme_void()
+```
+
+```{r grafton, message = FALSE,cache = TRUE, results = FALSE}
+
+grafton <- get_acs(geography = "tract",
+                  variables = racevars, 
+                  year = 2018,
+                  state = "NH",
+                  county = "Grafton County",
+                  geometry = TRUE,
+                  summary_var = "B02001_001")
+
+grafton %>%
+  mutate(Percent = 100 * (estimate / summary_est)) %>%
+  ggplot(aes(fill = Percent, color = Percent)) +
+  facet_wrap(~ variable) +
+  geom_sf() +
+  scale_fill_viridis_c(direction = -1) +
+  scale_color_viridis_c(direction = -1) +
+  labs(title = "Racial geography of Grafton County, NH",
+       caption = "Source: American Community Survey 2014-2018") +
+  theme_void()
+```
+
+```{r california_variable, message = FALSE, cache = TRUE, results = FALSE}
+california <- get_acs(geography = "tract",
+                  variables = racevars, 
+                  year = 2018,
+                  state = "CA",
+                  geometry = TRUE,
+                  summary_var = "B02001_001")
+
+california %>% 
+  mutate(Percent = 100 * (estimate / summary_est)) %>%
+  ggplot(aes(fill = Percent, color = Percent)) +
+  facet_wrap(~ variable) +
+  geom_sf() +
+  scale_fill_viridis_c(direction = -1) +
+  scale_color_viridis_c(direction = -1) +
+  labs(title = "Racial geography of California",
+       caption = "Source: American Community Survey 2014-2018") +
+  theme_void()
+```
+
+```{r sanfrancisco, message = FALSE, cache = TRUE, results = FALSE}
+sanfrancisco <- get_acs(geography = "tract",
+                  variables = racevars, 
+                  year = 2018,
+                  state = "CA",
+                  county = "San Francisco County",
+                  geometry = TRUE,
+                  summary_var = "B02001_001")
+
+sanfrancisco %>%
+  mutate(Percent = 100 * (estimate / summary_est)) %>%
+  ggplot(aes(fill = Percent, color = Percent)) +
+  facet_wrap(~ variable) +
+  geom_sf() +
+  scale_fill_viridis_c(direction = -1) +
+  scale_color_viridis_c(direction = -1) +
+  labs(title = "Racial geography of San Francisco County, CA",
+       caption = "Source: American Community Survey 2014-2018") +
+  theme_void()
+```
+
+```{r oregon, message = FALSE, cache = TRUE, results = FALSE}
+oregon <- get_acs(geography = "tract",
+                  variables = racevars, 
+                  year = 2018,
+                  state = "OR",
+                  geometry = TRUE,
+                  summary_var = "B02001_001")
+
+oregon %>% 
+  mutate(Percent = 100 * (estimate / summary_est)) %>%
+  ggplot(aes(fill = Percent, color = Percent)) +
+  facet_wrap(~ variable) +
+  geom_sf() +
+  scale_fill_viridis_c(direction = -1) +
+  scale_color_viridis_c(direction = -1) +
+  labs(title = "Racial geography of Oregon",
+       caption = "Source: American Community Survey 2014-2018") +
+  theme_void()
+```
+
+```{r marion_county, message = FALSE, cache = TRUE, results = FALSE}
+marion <- get_acs(geography = "tract",
+                  variables = racevars, 
+                  year = 2018,
+                  state = "OR",
+                  county = "Marion County",
+                  geometry = TRUE,
+                  summary_var = "B02001_001")
+
+marion %>% 
+  mutate(Percent = 100 * (estimate / summary_est)) %>%
+  ggplot(aes(fill = Percent, color = Percent)) +
+  facet_wrap(~ variable) +
+  geom_sf() +
+  scale_fill_viridis_c(direction = -1) +
+  scale_color_viridis_c(direction = -1) +
+  labs(title = "Racial geography of Marion County, OR",
+       caption = "Source: American Community Survey 2014-2018") +
+  theme_void()
+```
+
